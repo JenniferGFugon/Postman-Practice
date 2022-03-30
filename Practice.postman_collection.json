@@ -1,0 +1,243 @@
+{
+	"info": {
+		"_postman_id": "aa8ccba6-a090-4f93-9d02-16f373038707",
+		"name": "Practice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//generate and set dynamically the email and username environment variables",
+							"const email = pm.variables.replaceIn('{{$randomEmail}}') ",
+							"const user = pm.variables.replaceIn('{{$randomUserName}}') ",
+							"",
+							"pm.environment.set(\"email\",email)",
+							"pm.environment.set(\"username\",user)",
+							"",
+							"console.log(pm.environment.get(\"email\"));",
+							"console.log(pm.environment.get(\"username\"));",
+							"//generar email y username dinamicamente"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//evaluate the following: ",
+							"//a. Status code 200, ",
+							"pm.test(\"Code Status is 200\",function(){",
+							"        pm.response.to.have.status(200);",
+							"})",
+							"",
+							"",
+							"//response body contains the keyword \"message\" which will include the userID ",
+							"pm.test(\"Verify response body contains keyword message\",function()",
+							"{",
+							"   pm.expect(pm.response.text()).to.include(\"message\");",
+							"});",
+							"",
+							"",
+							"//Save the user-id from the response to the environment variable already defined",
+							"",
+							"pm.test(\"Save user id from the response to enviroment variable\",function(){",
+							"    const r = pm.response.json()",
+							"    console.log(r.message)",
+							"    pm.environment.set(\"userID\",r.message)",
+							"})",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{$randomInt}},\n  \"username\": \"{{username}}\",\n  \"firstName\": \"{{$randomFirstName}}\",\n  \"lastName\": \"{{$randomLastName}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{$randomPassword}}\",\n  \"phone\": \"{{$randomPhoneNumber}}\",\n  \"userStatus\": 17120112\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}",
+					"host": [
+						"{{baseURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Status code 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//response body contains the keywords \"id\", \"username\", \"email\"",
+							"pm.test(\"Verify response body contains keywords id,username,email\",function()",
+							"{",
+							"   pm.expect(pm.response.text()).to.include(\"id\");",
+							"   pm.expect(pm.response.text()).to.include(\"username\");",
+							"   pm.expect(pm.response.text()).to.include(\"email\");",
+							"",
+							"});",
+							"",
+							"",
+							"//Verify the values of \"id\", \"username\", \"email\" keywords from the response are equal to the env variables generated/set on the Create user request",
+							"pm.test(\"Verify id equal to userID env variable\", function () {",
+							"    res = pm.response.json()",
+							"    id=Number(pm.environment.get(\"userID\"))",
+							"    pm.expect(res.id).to.eq(id)",
+							"   ",
+							"",
+							"});",
+							"",
+							"pm.test(\"Verify username equal to username env variable\", function () {",
+							"    res = pm.response.json()",
+							"    const userName=pm.environment.get(\"username\")",
+							"    pm.expect(res.username).to.eq(userName)",
+							"});",
+							"",
+							"pm.test(\"Verify email equal to email env variable\", function () {",
+							"    res = pm.response.json()",
+							"    eMail=pm.environment.get(\"email\")",
+							"    pm.expect(res.email).to.eq(eMail)",
+							"});",
+							"",
+							"//falta punto b",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}{{username}}",
+					"host": [
+						"{{baseURL}}{{username}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Status code 200 ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//response body contains the keyword \"message\" which will include the login session ID",
+							"pm.test(\"Response contains the keyword message\",function()",
+							"{",
+							"   const respuesta= pm.response().jsson()",
+							"   pm.expect(pm.response.text()).to.include(\"message\");",
+							"   console.log(respuesta)",
+							"});",
+							"",
+							"//Verify the value of \"message\" from the response includes the text that tells the user has logged in successfully to the app",
+							"pm.test(\"Verify response message\",function()",
+							"{",
+							"   pm.expect(pm.response.text()).to.include(\"logged in user session\");",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}login",
+					"host": [
+						"{{baseURL}}login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//response body contains the keyword \"message\" which will include the username that gets deleted",
+							"pm.test(\"Verify response body contains keyword message\",function()",
+							"{",
+							"   pm.expect(pm.response.text()).to.include(\"message\");",
+							"});",
+							"",
+							"//Verify the value of \"message\" from the response is equal to the username env variable generated/set on the Create user request",
+							"pm.test(\"Verify value message is equal to username env variable\",function(){",
+							"    const res = pm.response.json()",
+							"    const user = pm.environment.get(\"username\")",
+							"    pm.expect(pm.response.json().message).to.equal(user);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}{{username}}",
+					"host": [
+						"{{baseURL}}{{username}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
