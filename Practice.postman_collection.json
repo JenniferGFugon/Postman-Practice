@@ -123,7 +123,6 @@
 							"    pm.expect(res.email).to.eq(eMail)",
 							"});",
 							"",
-							"//falta punto b",
 							"",
 							""
 						],
@@ -167,9 +166,7 @@
 							"//response body contains the keyword \"message\" which will include the login session ID",
 							"pm.test(\"Response contains the keyword message\",function()",
 							"{",
-							"   const respuesta= pm.response().jsson()",
 							"   pm.expect(pm.response.text()).to.include(\"message\");",
-							"   console.log(respuesta)",
 							"});",
 							"",
 							"//Verify the value of \"message\" from the response includes the text that tells the user has logged in successfully to the app",
