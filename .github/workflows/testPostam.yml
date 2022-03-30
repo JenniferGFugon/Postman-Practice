@@ -28,5 +28,5 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: run postaman
-        run: newman run Practice.postmanCollection.json -e Training.postmanEnvironment.json
+        run: newman run Practice.postman_collection.json -e Training.postmanEnvironment.json
 
