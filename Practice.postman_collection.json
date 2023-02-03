@@ -16,9 +16,11 @@
 							"const email = pm.variables.replaceIn('{{$randomEmail}}') ",
 							"const user = pm.variables.replaceIn('{{$randomUserName}}') ",
 							"",
+							"Set environment variables with information generated before",
 							"pm.environment.set(\"email\",email)",
 							"pm.environment.set(\"username\",user)",
 							"",
+							"Print variables in the console log",
 							"console.log(pm.environment.get(\"email\"));",
 							"console.log(pm.environment.get(\"username\"));",
 							"//generar email y username dinamicamente"
